@@ -16,6 +16,28 @@ coin = new Blockchain();
 
 
 
+function addNode(add){
+    request.post(add + "/isOnline", {
+	    
+	    body: {
+            msg: "online"
+            
+        },
+        timeout: 3000,
+	    json: true
+	  }, function(error, response, body){
+        if (error || miner.hasOwnProperty(add)) {
+            console.log("No");
+            return 0;
+        }
+        miner.push(add);
+        console.log("Add");
+        return 0;
+         
+	});
+}
+
+
 //BlockIndex is the index of variable chain
 function broadcastBlock(blockIndex){
     for(let i=0;i<nodes.length;i++){
@@ -71,7 +93,7 @@ app.post('/transactions', function (req, res) {
               
           });
           console.log(coin.getLastBlock());
-          broadcastBlock(1);
+          broadcastBlock(coin.getLastIndex());
         }
        
     }
@@ -80,6 +102,10 @@ app.post('/transactions', function (req, res) {
 app.post('/lastBlock', function (req, res) {
     var bod = req.body;
     res.send(coin.getLastBlock());
+});
+
+app.post('/isOnline', function (req, res) {
+    res.send("Online");
 });
 
 app.listen(2030,function(){

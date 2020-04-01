@@ -74,8 +74,18 @@ class Blockchain{
     constructor(){
         this.chain = [this.createGenesisBlock()];
         this.pendingChain = [];
-        this.dificulty = 2;
+        this.dificulty = 3;
         this.transactionsIndex = 0;
+        this.waits = [];
+        
+    }
+    getFrontWaits(num){
+        if(waits[num].length==0){
+            return chain[0];
+        }
+        else{
+            return this.waits[num][0];
+        }
     }
     createGenesisBlock(){
         return new Block(0, "2020-03-24", [new transactions("GenesisBlock", "", 0), new transactions("GenesisBlock", "", 0)]);
@@ -145,6 +155,22 @@ class Blockchain{
         
         this.chain.push(block);
         
+    }
+    addWaits(block){
+        this.waits.push(block);
+        if(this.waits.length>4){
+            this.addBlock(this.waits[0]);
+            this.waits.shift();
+        }
+    }
+    
+    getWaitsLast(){
+        if(this.waits.length == 0){
+            return this.getLastBlock();
+        }
+        else{
+            return this.waits[this.waits.length - 1];
+        }
     }
 
 }
